@@ -1,6 +1,8 @@
-﻿using EfCorePerformance.Application.Contacts;
+﻿using BenchmarkDotNet.Running;
+using EfCorePerformance.Application.Contacts;
 using EfCorePerformance.Application.Persistence;
 using EfCorePerformance.Application.Services;
+using EfCorePerformance.ConsoleApp.Tests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,11 +32,15 @@ class Program
                 .AddTransient<IExamplesJoinAppService, ExamplesJoinAppService>()
                 .AddTransient<IExamplesPaginationsAppService, ExamplesPaginationsAppService>()
                 .AddTransient<ITestAppService, TestAppService>()
+                // Console test files
+                .AddTransient<IPeformanceTest, PeformanceTest>()
             .BuildServiceProvider();
 
         //do the actual work here
-        var testService = serviceProvider.GetService<ITestAppService>();
-        var result = testService.NoTracking();
+        //var peformanceTest = serviceProvider.GetService<IPeformanceTest>();
+        //var result = peformanceTest.WhereCount();
+
+        var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
 
 
     }
